@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>合成大挑战 - 自定义图片合成游戏</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Matter.js 物理引擎（用于重力下落和碰撞检测） -->
+    <script src="js/matter.min.js"></script>
+</head>
+<body>
+    <!-- 游戏主容器 -->
+    <div class="game-container">
+        <!-- 开始页面：显示游戏标题和功能按钮 -->
+        <div id="startScreen" class="start-screen">
+            <h1>🎮 合成大挑战</h1>
+            <p class="subtitle">自定义图片合成游戏</p>
+            <div class="start-actions">
+                <button id="startBtn" class="btn btn-primary">
+                    🚀 开始游戏
+                </button>
+                <button id="settingsBtnStart" class="btn btn-secondary">
+                    🎨 自定义素材
+                </button>
+                <button id="collectionBtnStart" class="btn btn-secondary">
+                    📖 图鉴
+                </button>
+            </div>
+        </div>
+
+        <!-- 游戏页面 -->
+        <div id="gameScreen" class="game-screen">
+            <!-- 顶部信息栏 -->
+            <div class="game-header">
+                <div class="score-section">
+                    <div class="score-label">当前分数</div>
+                    <div id="score" class="score-value">0</div>
+                </div>
+                <div class="score-section">
+                    <div class="score-label">最高分</div>
+                    <div id="highScore" class="score-value high-score-value">0</div>
+                </div>
+                <div class="header-actions">
+                    <button id="collectionBtn" class="btn btn-icon btn-secondary" title="图鉴">📖</button>
+                    <button id="settingsBtn" class="btn btn-icon btn-secondary" title="设置">⚙️</button>
+                </div>
+            </div>
+
+            <!-- 游戏画布区域 -->
+            <div class="game-canvas-container">
+                <canvas id="gameCanvas"></canvas>
+            </div>
+
+            <!-- 底部控制栏 -->
+            <div class="game-footer">
+                <div class="next-preview">
+                    <span class="next-label">下一个:</span>
+                    <img id="nextLevel" class="next-image" src="" alt="下一个">
+                </div>
+                <button id="restartBtn" class="btn btn-small btn-primary">
+                    🔄 重新开始
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 游戏结束弹窗 -->
+    <div id="gameOverModal" class="modal">
+        <div class="modal-content game-over-content">
+            <h2 class="game-over-title">游戏结束</h2>
+            <div class="score-display">
+                <div class="label">本次得分</div>
+                <div id="finalScore" class="value">0</div>
+            </div>
+            <div class="score-display high-score-display">
+                <div class="label">最高分</div>
+                <div id="finalHighScore" class="value">0</div>
+            </div>
+            <button id="playAgainBtn" class="btn btn-primary" style="width: 100%; margin-top: 20px;">
+                🎮 再来一局
+            </button>
+        </div>
+    </div>
+
+    <!-- 素材管理弹窗 -->
+    <div id="assetsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">🎨 自定义素材</h3>
+                <button id="closeAssetsBtn" class="modal-close">&times;</button>
+            </div>
+            <div id="assetsGrid" class="assets-grid">
+                <!-- 动态生成 -->
+            </div>
+            <div class="batch-actions">
+                <button id="batchUploadBtn" class="btn btn-small btn-primary">
+                    📁 批量上传
+                </button>
+                <button id="resetAssetsBtn" class="btn btn-small btn-reset">
+                    🔄 恢复默认
+                </button>
+            </div>
+            <input type="file" id="batchFileInput" accept="image/*" multiple style="display: none;">
+            <div class="storage-notice">
+                ⚠️ 图片以 Base64 格式存储在本地，大量高清图片可能占用较多存储空间。建议使用 200x200 像素以内的图片。
+            </div>
+        </div>
+    </div>
+
+    <!-- 图鉴弹窗 -->
+    <div id="collectionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">📖 合成图鉴</h3>
+                <button id="closeCollectionBtn" class="modal-close">&times;</button>
+            </div>
+            <div class="collection-stats">
+                <span>已解锁: <strong id="unlockCount">0</strong> / 11</span>
+            </div>
+            <div id="collectionGrid" class="collection-grid">
+                <!-- 动态生成 -->
+            </div>
+            <div class="storage-notice">
+                💡 合成更高等级的物品来解锁图鉴！
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 加载脚本 -->
+    <script src="js/utils.js"></script>
+    <script src="js/assets.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/ui.js"></script>
+    <script>
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', () => {
+            // 检测是否在 file:// 协议下
+            if (window.location.protocol === 'file:') {
+                console.warn('提示：音效需要通过 HTTP 服务器访问才能正常工作。');
+                console.warn('请运行 start.bat 启动本地服务器，或访问 http://localhost:8000');
+            }
+
+            AssetsManager.init();
+            UI.init();
+        });
+    </script>
+</body>
+</html>
